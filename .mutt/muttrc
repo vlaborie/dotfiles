@@ -1,0 +1,48 @@
+source ~/.mutt/local
+
+# configuration de base
+set realname = "Victor Laborie"
+set header_cache =~/.mutt/cache/headers
+set certificate_file =~/.mutt/certificates
+set message_cachedir =~/.mutt/cache/bodies
+set send_charset="utf-8"
+
+# configuration Maildir
+set mbox_type=Maildir
+set spoolfile=+/
+
+# configuration SMTP
+set use_envelope_from=yes # Pour que postfix ou sendmail ne change pas votre from
+set signature = "~/.mutt/signature"
+
+set edit_hdrs = yes
+set editor="vim -c 'set textwidth=72' "
+
+# configuration GPG
+set pgp_use_gpg_agent=yes
+set crypt_use_gpgme=yes
+set crypt_autosign=yes
+set crypt_replyencrypt=yes
+set pgp_timeout=3600
+
+# bind
+bind index F flag-message
+
+set mail_check = 15
+alternative_order text/plain text/html
+auto_view text/html
+
+# configuration Sort
+set sort = threads
+set sort_aux = last-date-received
+
+#set pager_index_lines=20
+unset sidebar_visible
+set index_format="%5C | %Z | %d | %-50.50f - %s (%-4.4c)"
+#set date_format="%A, %e %B %Y at %k:%M:%S %Z"
+set date_format="%d/%m/%y - %k:%M:%S"
+set status_on_top	# put the status bar at the top
+
+macro index,pager \eu "<enter-command>set pipe_decode=no\n<pipe-entry>/usr/bin/perl ~/.local/bin/unsubscribe\n<enter-command>set pipe_decode=yes\n" "Try to unsubscribe via List-Unsubscribe header"
+
+source ~/.mutt/colors

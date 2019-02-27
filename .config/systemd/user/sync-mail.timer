@@ -1,0 +1,13 @@
+[Unit]
+Description=Run my job every 20 minutes
+RefuseManualStart=no
+RefuseManualStop=no
+
+[Timer]
+Persistent=true
+OnBootSec=180
+OnCalendar=*:0/20
+Unit=sync-mail.service
+
+[Install]
+WantedBy=timers.target

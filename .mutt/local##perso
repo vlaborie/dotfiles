@@ -1,0 +1,11 @@
+set folder = ~/.mail/posteo/Inbox
+set record = ~/.mail/posteo/Sent
+set trash = ~/.mail/posteo/Trash
+set postponed = ~/.mail/posteo/Drafts
+
+set from = "erg@posteo.net"
+
+set my_user = erg@posteo.net
+set my_pass = `~/.local/bin/pass-filter Mail/Posteo`
+set smtp_url = smtps://$my_user:$my_pass@posteo.de
+set ssl_force_tls = yes

@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# Description: lock screen, mute sound and kill GPG agent
+# Author: Victor Laborie
+# License: MIT
+#
+
+set -u
+
+scrot_file=$(mktemp --tmpdir=/dev/shm --suffix=.png)
+blur_file=$(mktemp --tmpdir=/dev/shm)
+
+trap "rm -f ${blur_file}" 0
+
+pactl set-sink-mute 0 1
+gpgconf --kill gpg-agent
+sudo -k
+~/.local/bin/close-encrypted-maildir
+
+scrot "${scrot_file}" && convert -blur 0x4 "${scrot_file}" "${blur_file}" && rm -f "${scrot_file}"
+i3lock -n -p default -ei "${blur_file}"
+pactl set-sink-mute 0 0

@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# Description: bootstrap yadm config and submodules
+# Author: Victor Laborie
+# License: MIT
+#
+
+set -eu
+
+cd "${HOME}"
+
+printf "Retrieve or update GPG public key:\n"
+gpg --recv-keys 0x9F9A19C4EECF23EF
+printf "\n"
+
+printf "Change yadm git origin to SSH url:\n"
+yadm remote set-url origin git@github.com:vlaborie/dotfiles.git
+printf "\n"
+
+printf "Init or update submodules:\n"
+yadm submodule update --recursive --init
+printf "\n"
+
+printf "Retrieve or update Flatpak apps:\n"
+~/.local/bin/flatpak-auto
+printf "\n"

@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Description: output pass content into json format
+# Author: Victor Laborie
+# License: MIT
+#
+
+set -eu
+
+name="${1:-}"
+
+echo "{\n    \"password\": \"$(pass "${name}"|head -n1)\""
+
+echo "$(pass "${name}"|tail -n+2)"|while read line; do
+    echo "${line}"|grep -qE "^[^:]+:(.*)$" && {
+        printf "    ,\""
+        echo "${line}"|awk '{ printf $1 }'|sed 's/:$//'
+        printf "\": \""
+        echo "${line}"|awk '{ printf $2 }'
+        printf "\"\n"
+    } || true
+done
+
+echo "}"

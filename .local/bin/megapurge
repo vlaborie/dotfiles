@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Description: purge yadm config and submodules
+# Author: Victor Laborie
+# License: MIT
+#
+
+printf "Remove all submodules:\n"
+yadm submodule deinit --force --all
+printf "\n"
+
+printf "Remove all yadm managed files:\n"
+yadm list | xargs rm -r
+printf "\n"
+
+printf "Remove yadm repository:\n"
+rm -rf ~/.yadm
+printf "\n"

@@ -1,0 +1,54 @@
+#!/usr/bin/perl
+#
+# Description: unsubscribe to mailing-list by parsing mail header
+# Author: Victor Laborie
+# License: MIT
+#
+
+use strict;
+use warnings;
+use Email::Simple; #libemail-simple-perl
+use LWP::UserAgent;
+use HTTP::Request;
+
+my $mail = join("", <STDIN>);
+
+my $email = Email::Simple->new($mail);
+
+my $from = $email->header("From") =~ s/.*<([^>]*)>.*/$1/r;
+
+my $to = $email->header("To") =~ s/.*<([^>]*)>.*/$1/r;
+
+my $unsubscribe_http;
+my $unsubscribe_post;
+
+if ($email->header("List-Unsubscribe") ne "") {
+    $unsubscribe_http = $email->header("List-Unsubscribe") =~ s/.*<(http[^>]*)>.*/$1/r;
+
+    if ($email->header("List-Unsubscribe-Post") ne "") {
+        $unsubscribe_post = $email->header("List-Unsubscribe-Post") =~ s/List-Unsubscribe=(.*)/$1/r;
+        
+        my $ua = LWP::UserAgent->new;
+        $ua->agent("Perlbot");
+        
+        my $req = HTTP::Request->new(POST => "$unsubscribe_http");
+        $req->content_type('multipart/form-data');
+        $req->content($unsubscribe_post);
+        
+        my $res = $ua->request($req);
+        
+        if ($res->is_success) {
+            exit 0;
+        } else {
+            print($res->status_line, "\n");
+            print("$from\n");
+            print("$to\n");
+            print("$unsubscribe_http\n");
+            exit 1;
+        }
+    } else {
+    	system("firefox", "$unsubscribe_http");
+    }
+} else {
+    print("No List-Unsubscribe header\n");
+}

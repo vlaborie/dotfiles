@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# Description: auto install and update flatpak apps from list
+# Author: Victor Laborie
+# License: MIT
+#
+
+while read repo; do
+    name=$(echo "${repo}"|awk '{ print $1 }')
+    url=$(echo "${repo}"|awk '{ print $2 }')
+    flatpak --user remote-add --if-not-exists "${name}" "${url}"
+    [ -f "${HOME}/.config/flatpak/${name}.list" ] && while read app; do
+        flatpak --user install "${name}" "${app}" --assumeyes
+    done < "${HOME}/.config/flatpak/${name}.list"
+done < "${HOME}/.config/flatpak/repos"
+
+flatpak --user update --assumeyes

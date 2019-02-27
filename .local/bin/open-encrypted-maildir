@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# Description: open encrypted maildir
+# Author: Victor Laborie
+# License: MIT
+#
+
+set -eu
+
+find ~/.password-store/Mail -name "*.gpg" -type f -exec basename {} .gpg \;|while read account; do
+    dir=$(echo "${account}"|tr '[:upper:]' '[:lower:]')
+    install -d "${HOME}/.mail" -m 0700
+    install -d "${HOME}/.mail/.${dir}" -m 0700
+    install -d "${HOME}/.mail/${dir}" -m 0700
+    [ -f "${HOME}/.mail/.${dir}/gocryptfs.conf" ] || gocryptfs -quiet -extpass "${HOME}/.local/bin/pass-filter Mail/${account}" -init "${HOME}/.mail/.${dir}"
+    mountpoint -q "${HOME}/.mail/${dir}" || gocryptfs -quiet -extpass "${HOME}/.local/bin/pass-filter Mail/${account}" "${HOME}/.mail/.${dir}" "${HOME}/.mail/${dir}"
+done

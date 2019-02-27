@@ -1,0 +1,49 @@
+#/bin/sh
+#
+# Description: connect to vpn network using password-store managed config
+# Author: Victor Laborie
+# License: MIT
+#
+
+set -eu
+
+range=$(find ~/.password-store/VPN -name "*.gpg" -type f -exec basename {} .gpg \;)
+nb=$(echo "${range}"|wc -l)
+
+printf "Choose a VPM:\n"
+echo "${range}"|nl
+
+choose_vpn() {
+    printf "Your choice: "
+    read choice
+    # test if $choice is an integer and not equal to 0
+    [ $choice -eq 0 ] 2>/dev/null && choose_vpn
+    [ $? -eq 0 -o $? -eq 1 ] || choose_vpn
+    # test if $choice is not superior to nb of choice
+    [ $choice -gt $nb ] && choose_vpn
+    name=$(echo "${range}"|sed -n "${choice}p")
+    ext=$(echo "${name}"|cut -d'.' -f2)
+    case "${ext}" in
+        ovpn)
+            pass "VPN/${name}"|sudo openvpn --config /dev/stdin \
+              --route-nopull --redirect-gateway def1 \
+              --auth-nocache \
+              --user nobody --group nogroup \
+              --persist-key --persist-tun \
+              --nobind --dev tun0 \
+              --tls-client --client
+            ;;
+        wg)
+            tmpdir=$(mktemp -d)
+            pass "VPN/${name}" > "${tmpdir}/wg0.conf"
+            sudo wg-quick up "${tmpdir}/wg0.conf"
+            rm "${tmpdir}/wg0.conf"
+            curl https://am.i.mullvad.net/connected
+            ;;
+        *)
+            printf "Unknown VPN type ${ext} !\n"
+            exit 1;;
+    esac
+}
+
+choose_vpn

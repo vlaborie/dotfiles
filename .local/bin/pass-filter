@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# Description: filter pass output
+# Author: Victor Laborie
+# License: MIT
+#
+
+set -eu
+
+name="${1:-}"
+filter="${2:-password}"
+
+if [ "${filter}" = "password" ]; then
+    pass "${name}"|head -n1
+else
+    pass "${name}"|grep -E "^${filter}:"|awk '{ print $2 }'
+fi

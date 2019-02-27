@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Description: get sha256 SRI of a web page
+# Author: Victor Laborie
+# License: MIT
+# Documentation: https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
+#
+
+set -eu
+
+url=${1:-}
+
+curl --silent "${url}"|sha256sum -|xxd -r -p|base64

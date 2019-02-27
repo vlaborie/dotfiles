@@ -1,0 +1,20 @@
+[pull]
+        rebase = true
+[push]
+        default = simple
+[core]
+        editor = vim
+[rebase]
+        autosquash = true
+[diff "ansible-vault"]
+        textconv = ansible-vault view
+        cachetextconv = true
+[user]
+	signingkey = 0x9F9A19C4EECF23EF
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[include]
+	path = .gitconfig.local

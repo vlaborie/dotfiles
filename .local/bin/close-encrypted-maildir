@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Description: close encrypted maildir
+# Author: Victor Laborie
+# License: MIT
+#
+
+set -eu
+
+find ~/.password-store/Mail -name "*.gpg" -type f -exec basename {} .gpg \;|while read account; do
+    dir=$(echo "${account}"|tr '[:upper:]' '[:lower:]')
+    mountpoint -q "${HOME}/.mail/${dir}" && fusermount -u "${HOME}/.mail/${dir}"
+done

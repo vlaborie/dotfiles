@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# Description: mount LUKS device using password-store managed keyfiles
+# Author: Victor Laborie
+# License: MIT
+#
+
+set -eu
+
+range=$(find ~/.password-store/LUKS -name "*.gpg" -type f -exec basename {} .gpg \;|while read device; do
+    if [ -b "/dev/disk/by-label/${device}" ]; then
+        printf "${device}"
+        [ -b "/dev/mapper/${device}" ] && printf " (opened)"
+        mountpoint --quiet "/media/${device}" && printf " (mounted)"
+        printf "\n"
+    fi
+done)
+nb=$(echo "${range}"|wc -l)
+
+printf "Choose a LUKS device:\n"
+echo "${range}"|nl
+
+choose_luks() {
+    printf "Your choice: "
+    read choice
+    # test if $choice is an integer and not equal to 0
+    [ $choice -eq 0 ] 2>/dev/null && choose_luks
+    [ $? -eq 0 -o $? -eq 1 ] || choose_luks
+    # test if $choice is not superior to nb of choice
+    [ $choice -gt $nb ] && choose_luks
+    name=$(echo "${range}"|awk '{ print $1 }'|sed -n "${choice}p")
+
+    mountpoint --quiet "/media/${name}" && {
+        sudo umount "/media/${name}"
+        sudo cryptsetup luksClose "${name}"
+    } || {
+        [ -b "/dev/mapper/${name}" ] || pass "LUKS/${name}"|sudo cryptsetup luksOpen "/dev/disk/by-label/${name}" "${name}" --key-file=/dev/stdin
+        mkdir -p "/media/${name}"
+        sudo mount -o noatime "/dev/mapper/${name}" "/media/${name}"
+    }
+}
+
+choose_luks

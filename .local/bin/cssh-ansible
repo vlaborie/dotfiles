@@ -1,0 +1,4 @@
+#!/bin/sh
+
+grp="${1:-all}"
+cssh $(ansible -i inventory -m debug -a "msg={{ groups[\'${grp}\'] | map('extract', hostvars, ['ansible_host']) | join(' ') }}" localhost -c local|sed 's/localhost | SUCCESS => //'|jq -r '.msg')
