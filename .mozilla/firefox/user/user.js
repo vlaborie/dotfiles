@@ -13,7 +13,6 @@ lockPref("plugin.scan.plid.all", false);
 lockPref("network.dns.disableprefetch", true);
 lockPref("network.prefetch-next", false);
 //lockPref("network.http.sendRefererHeader", 0);
-lockPref("webgl.disabled", true);
 lockPref("dom.battery.enabled", false);
 //lockPref("privacy.firstparty.isolate", false);
 lockPref("browser.urlbar.trimURLs", false);
