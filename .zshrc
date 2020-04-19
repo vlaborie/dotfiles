@@ -102,6 +102,5 @@ source "${ZSH}/oh-my-zsh.sh"
 alias perso="yadm config local.class perso"
 alias pro="yadm config local.class pro"
 alias mutt="~/.local/bin/open-encrypted-maildir && /usr/bin/mutt"
-alias sync-mail="~/.local/bin/open-encrypted-maildir && /usr/bin/mbsync --all"
 
 gpg-connect-agent updatestartuptty /bye
