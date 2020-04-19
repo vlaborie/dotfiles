@@ -1,5 +1,5 @@
 [Unit]
-Description=Run my job every 20 minutes
+Description=Run sync-mail service every 20 minutes
 RefuseManualStart=no
 RefuseManualStop=no
 
