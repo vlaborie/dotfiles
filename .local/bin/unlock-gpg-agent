@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Description: unlock gpg-agent or fail when locked gpg-agent and no TTY
+# Author: Victor Laborie
+# License: MIT
+#
+
+set -eu
+
+file=$(mktemp --tmpdir=/dev/shm)
+gpg --encrypt "${file}"
+trap "rm ${file} ${file}.gpg" 0
+
+tty -s && {
+    gpg --decrypt --quiet --pinentry-mode ask --output /dev/null "${file}.gpg"
+} || {
+    gpg --decrypt --batch --no-tty --quiet --pinentry-mode cancel --output /dev/null "${file}.gpg" 2>/dev/null
+}
