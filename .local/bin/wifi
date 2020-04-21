@@ -7,7 +7,7 @@
 
 set -eu
 
-range=$(find ~/.password-store/Wifi -name "*.gpg" -type f -exec basename {} .gpg \;)
+range=$(find -L ~/.password-store/Wifi -name "*.gpg" -type f -exec basename {} .gpg \;)
 nb=$(echo "${range}"|wc -l)
 
 printf "Choose a Wifi connection:\n"
@@ -23,7 +23,7 @@ choose_wifi() {
     [ $choice -gt $nb ] && choose_wifi 
     name=$(echo "${range}"|sed -n "${choice}p")
     network=$(wpa_cli add_network|tail -n1)
-    wpa_cli set_network ${network} ssid "\"$(pass-filter Wifi/${name} login)\"" >/dev/null
+    wpa_cli set_network ${network} ssid "\"${name}\"" >/dev/null
     [ "$(pass-filter Wifi/${name} password)" = "none" ] && {
         wpa_cli set_network ${network} key_mgmt "NONE" >/dev/null
     } || {
