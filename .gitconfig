@@ -11,6 +11,8 @@
         cachetextconv = true
 [user]
 	signingkey = 0x9F9A19C4EECF23EF
+[commit]
+	gpgsign = true
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
