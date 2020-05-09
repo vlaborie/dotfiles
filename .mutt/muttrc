@@ -31,6 +31,7 @@ bind index F flag-message
 set mail_check = 15
 alternative_order text/plain text/html
 auto_view text/html
+set mailcap_path  = ~/.mutt/mailcap
 
 # configuration Sort
 set sort = threads
