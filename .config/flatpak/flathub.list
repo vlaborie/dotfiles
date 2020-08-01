@@ -1,8 +1,10 @@
+com.airtame.Client
+com.obsproject.Studio
+com.slack.Slack
 com.spotify.Client
-org.gnome.Nautilus
+io.github.celluloid_player.Celluloid
+org.gnome.Evince
+org.mozilla.firefox
 org.pulseaudio.pavucontrol
 org.signal.Signal
 org.wireshark.Wireshark
-com.obsproject.Studio
-com.slack.Slack
-com.airtame.Client
