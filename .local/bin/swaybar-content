@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# Description: generate text output for swaybar
+# Author: Victor Laborie
+# License: MIT
+#
+
+date_and_week=$(date "+%d/%m/%Y (s%-V)")
+current_time=$(date "+%H:%M:%S")
+
+yadm_class=$(yadm config local.class)
+email=$(git config user.email)
+
+battery_status=$(upower --show-info $(upower --enumerate | grep 'BAT') | egrep "state" | awk '{print $2}')
+battery_charge=$(upower --show-info $(upower --enumerate | grep 'BAT') | egrep "percentage" | awk '{print $2}')
+battery_time=$(upower --show-info $(upower --enumerate | grep 'BAT') | egrep "time" | cut -d ':' -f2|xargs)
+
+ip route get 1.1.1.1 >/dev/null && {
+    network=$(ip route get 1.1.1.1 | head -n1 | awk '{ print $5 }')
+    gateway=$(ip route get 1.1.1.1 | head -n1 | awk '{ print $3 }')
+    ping=$(ping -c 1 ${gateway} | tail -1| awk '{print $4}' | cut -d '/' -f 2 | cut -d '.' -f 1)
+    network_mesg="$network_active $network ($ping ms) |"
+} || {
+    network_mesg=""
+}
+
+loadavg=$(cat /proc/loadavg | awk '{ print $2 }')
+
+[ $battery_status = "discharging" ] && battery_pluggedin='⚠' || battery_pluggedin='⚡'
+
+[ $network ] && network_active="⛔" || network_active="⇆"
+
+echo "$yadm_class ($email) | $network_mesg $loadavg | $battery_pluggedin $battery_time ($battery_charge) | $date_and_week | $current_time $data_and_week"
