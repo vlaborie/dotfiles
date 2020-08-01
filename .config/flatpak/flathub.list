@@ -4,7 +4,6 @@ com.slack.Slack
 com.spotify.Client
 io.github.celluloid_player.Celluloid
 org.gnome.Evince
-org.mozilla.firefox
 org.pulseaudio.pavucontrol
 org.signal.Signal
 org.wireshark.Wireshark
