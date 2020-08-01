@@ -10,8 +10,6 @@ while read repo; do
     url=$(echo "${repo}"|awk '{ print $2 }')
     flatpak --user remote-add --if-not-exists "${name}" "${url}"
     [ -f "${HOME}/.config/flatpak/${name}.list" ] && while read app; do
-        flatpak --user install "${name}" "${app}" --assumeyes
+        flatpak --user install --or-update "${name}" "${app}" --assumeyes
     done < "${HOME}/.config/flatpak/${name}.list"
 done < "${HOME}/.config/flatpak/repos"
-
-flatpak --user update --assumeyes
