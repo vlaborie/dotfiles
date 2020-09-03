@@ -12,11 +12,9 @@ blur_file=$(mktemp --tmpdir=/dev/shm)
 
 trap "rm -f ${blur_file}" 0
 
-pactl set-sink-mute 0 1
 gpgconf --kill gpg-agent
 sudo -k
 ~/.local/bin/close-encrypted-maildir
 
 grim "${grim_file}" && convert -blur 0x4 "${grim_file}" "${blur_file}" && rm -f "${grim_file}"
 swaylock --daemonize --ignore-empty-password --tiling --image "${blur_file}"
-pactl set-sink-mute 0 0
