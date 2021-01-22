@@ -1,10 +1,16 @@
-com.airtame.Client
+com.bitwarden.desktop
+com.github.tchx84.Flatseal
 com.obsproject.Studio
 com.slack.Slack
 com.spotify.Client
+im.riot.Riot
 io.github.celluloid_player.Celluloid
+org.gnome.Calendar
 org.gnome.Evince
+org.gnome.Maps
+org.gnome.Nautilus
 org.mozilla.firefox
+org.mozilla.Thunderbird
 org.pulseaudio.pavucontrol
 org.signal.Signal
 org.wireshark.Wireshark
