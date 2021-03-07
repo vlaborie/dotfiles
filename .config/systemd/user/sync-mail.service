@@ -1,6 +1,0 @@
-[Unit]
-Description=Synchronize IMAP4 and Maildir mailboxes
-
-[Service]
-Type=simple
-ExecStart=%h/.local/bin/sync-mail
